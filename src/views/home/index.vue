@@ -8,21 +8,33 @@
       <div class="logo" />
 
       <a-menu
+        v-model:selectedKeys="selectedKeys"
         theme="dark"
         mode="inline"
-        v-model:selectedKeys="selectedKeys"
         @select="jump"
       >
-        <a-sub-menu v-for="(item,index) of info.menu" :key="index">
+        <a-sub-menu
+          v-for="(item,index) of state.menu"
+          :key="index"
+        >
           <template #title>
             <div class="flex align-center">
-              <!-- <MailOutlined /> -->
-              <svg-icon v-if="item.icon" class="menu-icon" :name="item.icon" style="margin-right:14px"></svg-icon>
+              <svg-icon
+                v-if="item.icon"
+                class="menu-icon"
+                :name="item.icon"
+                style="margin-right:14px"
+              />
               <!-- <span v-text="item.icon"></span> -->
               <span>{{ item.text }}</span>
             </div>
           </template>
-          <a-menu-item  v-for="i of item.children" :key="i.name">{{ i.text }}</a-menu-item>
+          <a-menu-item
+            v-for="i of item.children"
+            :key="i.name"
+          >
+            {{ i.text }}
+          </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -40,7 +52,7 @@
         />
       </a-layout-header>
       <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
-        <router-view></router-view>
+        <router-view />
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -61,7 +73,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const selectedKeys = ref([])
 const collapsed = ref(false)
-const info = reactive({
+const state = reactive({
   menu:[
     {
       path:'user',

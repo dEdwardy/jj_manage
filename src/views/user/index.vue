@@ -3,45 +3,56 @@
     <div class="search-panel">
       <a-row>
         <a-form
+          style="width:100%"
           layout="inline"
-          :labelCol="{ style:'width:80px;margin-right:12px' }"
-          :wrapperCol="{ style:'flex:1' }"
+          :label-col="{ style:'width:80px;margin-right:12px' }"
+          :wrapper-col="{ style:'flex:1' }"
           :model="form"
         >
           <a-col :span="8">
             <a-form-item label="用户名">
-              <a-input v-model:value="form.username"></a-input>
+              <a-input v-model:value="form.username" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="联系电话">
-              <a-input v-model:value="form.phone"></a-input>
+              <a-input v-model:value="form.phone" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="用户状态">
-              <a-input v-model:value="form.status"></a-input>
+              <a-input v-model:value="form.status" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="创建时间">
-              <a-input v-model:value="form.created"></a-input>
+              <a-input v-model:value="form.created" />
             </a-form-item>
           </a-col>
-          <a-col :span="16">
-            <div class="buttons flex align-center justify-end">
-              <a-button type="primary">搜索</a-button>
-              <a-button>重置</a-button>
-            </div>
+          <a-col
+            :span="16"
+            class="buttons flex align-center justify-end"
+          >
+            <a-button
+              size="small"
+              type="primary"
+            >
+              搜索
+            </a-button>
+            <a-button size="small">
+              重置
+            </a-button>
           </a-col>
         </a-form>
       </a-row>
     </div>
     <a-table
       striped
-      :data-source="users"
-      :columns="columns"
-      :rowClassName="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+      row-key="id" 
+      :pagination="{ total:state.total }"
+      :data-source="state.users"
+      :columns="state.columns"
+      :row-class-name="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
     >
       <template #operation="{ record }">
         <div class="operation-btns">
@@ -49,21 +60,25 @@
             size="small"
             type="primary"
             @click="() => onView(record)"
-          >查看</a-button>
+          >
+            查看
+          </a-button>
           <a-button
             size="small"
             icon=""
             @click="() => onChange(record)"
-          >修改</a-button>
+          >
+            修改
+          </a-button>
           <a-popconfirm
-            v-if="users.length"
+            v-if="state.users.length"
             title="Sure to Disable?"
             @confirm="onDisable(record)"
           >
             <a>禁用</a>
           </a-popconfirm>
           <a-popconfirm
-            v-if="users.length"
+            v-if="state.users.length"
             title="Sure to delete?"
             @confirm="onDelete(record)"
           >
@@ -87,34 +102,39 @@
 </template>
 
 <script setup>
-import { ref, toRaw } from 'vue'
-const users = ref([{
-  key: '1',
-  username: 'a1234',
-  email: '25@qq.com'
-}, {
-  key: '2',
-  username: 'a12344',
-  email: '252@qq.com'
-}])
-const columns = ref([
-  {
-    title: '用户名',
-    dataIndex: 'username',
-    key: 'username'
-  },
-  {
-    title: '邮箱',
-    dataIndex: 'email',
-    key: 'email'
-  },
-  {
-    title: 'operation',
-    width: 220,
-    key: 'operation',
-    slots: { customRender: 'operation' }
-  }
-])
+import { useAxios } from '@vueuse/integrations'
+import instance from '../../utils/service'
+import { ref, toRaw, onMounted, watch, reactive } from 'vue'
+const state = reactive({
+  users: [],
+  total:0,
+  columns: [
+    {
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username'
+    },
+    {
+      title: '邮箱',
+      dataIndex: 'email',
+      key: 'email'
+    },
+    {
+      title: 'operation',
+      width: 220,
+      key: 'operation',
+      slots: { customRender: 'operation' }
+    }
+  ]
+})
+onMounted(() => {
+  const { data } = useAxios('/user', {}, instance)
+  watch(data, () => {
+    state.users = data.value.list
+    state.total = data.value.total
+    console.error(data.value)
+  })
+})
 const visible = ref(false)
 const onView = item => {
   console.log(toRaw(item))
@@ -124,6 +144,9 @@ const onChange = item => {
 }
 const onDisable = item => {
   console.log(item)
+}
+const hideModal = () => {
+  visible.value = false
 }
 const onDelete = item => {
   console.log(item)
@@ -143,6 +166,7 @@ const form = ref({
     justify-content: space-around;
   }
   .buttons {
+    display: flex;
     button {
       margin-right: 18px;
     }
