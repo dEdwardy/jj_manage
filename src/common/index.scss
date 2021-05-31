@@ -1,0 +1,37 @@
+.flex {
+  display: flex;
+
+  &.justify-between {
+    justify-content: space-between;
+  }
+
+  &.justify-around {
+    justify-content: space-around;
+  }
+
+  &.justify-center {
+    justify-content: center;
+  }
+
+  &.align-center {
+    align-items: center;
+  }
+
+  &.align-end {
+    align-items: flex-end;
+  }
+   &.align-center {
+    align-items: center;
+  }
+
+  &.justify-end {
+    justify-content: flex-end;
+  }
+
+  &.flex-column {
+    flex-direction: column;
+  }
+}
+.table-striped{
+  background-color: #fafafa !important;
+}
