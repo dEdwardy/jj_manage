@@ -5,10 +5,14 @@
       :trigger="null"
       collapsible
     >
-      <div class="logo" />
+      <div
+        class="logo"
+      >
+        JJ Manage
+      </div>
 
       <a-menu
-        v-model:selectedKeys="selectedKeys"
+        v-model:selectedKeys="state.selectedKeys"
         theme="dark"
         mode="inline"
         @select="jump"
@@ -23,10 +27,11 @@
                 v-if="item.icon"
                 class="menu-icon"
                 :name="item.icon"
-                style="margin-right:14px"
               />
-              <!-- <span v-text="item.icon"></span> -->
-              <span>{{ item.text }}</span>
+              <span
+                v-if="!collapsed"
+                style="margin-left:12px"
+              >{{ item.text }}</span>
             </div>
           </template>
           <a-menu-item
@@ -51,7 +56,7 @@
           @click="() => (collapsed = !collapsed)"
         />
       </a-layout-header>
-      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' }">
         <router-view />
       </a-layout-content>
     </a-layout>
@@ -59,84 +64,75 @@
 </template>
 
 <script setup>
-import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  QqOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  MailOutlined
-} from '@ant-design/icons-vue';
-import { ref,reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const selectedKeys = ref([])
 const collapsed = ref(false)
 const state = reactive({
-  menu:[
+  selectedKeys:[],
+  menu: [
     {
-      path:'user',
-      name:'user',
-      text:'用户管理',
-      icon:'user-manage',
-      children:[
+      path: 'user',
+      name: 'user',
+      text: '用户管理',
+      icon: 'user-manage',
+      children: [
         {
-          path:'list',
-          name:'user-list',
-          text:'用户列表',
-          icon:'',
+          path: 'list',
+          name: 'user-list',
+          text: '用户列表',
+          icon: '',
         }
       ]
     },
     {
-      path:'article',
-      name:'article',
-      text:'文章管理',
-      icon:'article-manage',
-      children:[
+      path: 'article',
+      name: 'article',
+      text: '文章管理',
+      icon: 'article-manage',
+      children: [
         {
-          path:'list',
-          name:'article-list',
-          text:'文章列表',
-          icon:'',
+          path: 'list',
+          name: 'article-list',
+          text: '文章列表',
+          icon: '',
         }
       ]
     },
     {
-      path:'category',
-      name:'category',
-      text:'分类管理',
-      icon:'category-manage',
-      children:[
+      path: 'category',
+      name: 'category',
+      text: '分类管理',
+      icon: 'category-manage',
+      children: [
         {
-          path:'list',
-          name:'category-list',
-          text:'分类列表',
-          icon:'',
+          path: 'list',
+          name: 'category-list',
+          text: '分类列表',
+          icon: '',
         }
       ]
     },
     {
-      path:'tag',
-      name:'tag',
-      text:'标签管理',
-      icon:'tag-manage',
-      children:[
+      path: 'tag',
+      name: 'tag',
+      text: '标签管理',
+      icon: 'tag-manage',
+      children: [
         {
-          path:'list',
-          name:'tag-list',
-          text:'标签列表',
-          icon:'',
+          path: 'list',
+          name: 'tag-list',
+          text: '标签列表',
+          icon: '',
         }
       ]
     }
   ]
 })
-const jump = ({key}) => {
+const jump = ({ key }) => {
   // console.error(key)
   router.push({
-    name:key
+    name: key
   })
 }
 </script>
@@ -146,9 +142,9 @@ const jump = ({key}) => {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  .menu-icon{
-    width:18px;
-    height:18px;
+  .menu-icon {
+    width: 18px;
+    height: 18px;
   }
   .trigger {
     font-size: 18px;
@@ -163,8 +159,19 @@ const jump = ({key}) => {
   }
 
   .logo {
+    transition: all .3s ease-in-out;
+    font-style: italic;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    letter-spacing: 4px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    color:#fff;
     height: 32px;
-    background: rgba(255, 255, 255, 0.3);
+    line-height: 32px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.2);
     margin: 16px;
   }
 

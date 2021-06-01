@@ -5,7 +5,7 @@
         <a-form
           style="width:100%"
           layout="inline"
-          :label-col="{ style:'width:80px;margin-right:12px' }"
+          :label-col="{ style:'margin:0 8px' }"
           :wrapper-col="{ style:'flex:1' }"
           :model="form"
         >

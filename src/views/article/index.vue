@@ -27,9 +27,16 @@
         发布
       </a-button>
     </div>
+    <div>
+      <a-form>
+        <a-form-item label="标题">
+          <a-input v-model:value="state.title" />
+        </a-form-item>
+      </a-form>
+    </div>
     <div class="editor">
       <quill-editor
-        v-model:content="state.content"
+        v-model:content="state.form.content"
         :toolbar="state.toolbar"
         content-type="html"
         style="height:400px"
@@ -66,7 +73,14 @@ const state = reactive({
 
     ['clean']
   ],
-  content: '',
+  form:{
+    title:'',
+    brief_content:'',
+    content: '',
+    author:'',
+    category:'',
+    tag:[],
+  }
 })
 const save = () => console.log(state.content)
 const publish = () => console.log(state.content)

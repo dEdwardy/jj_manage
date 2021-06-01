@@ -6,7 +6,7 @@
     <div class="buttons">
       <a-button
         type="priamry"
-        @click="handle"
+        @click="handleCreate"
       >
         新建
       </a-button>
@@ -14,9 +14,14 @@
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
+import { useRouter } from "vue-router"
 
+const router = useRouter()
+const handleCreate = () => {
+  router.push({
+    name:'article-detail'
+  })
 }
 </script>
 
