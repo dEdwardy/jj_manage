@@ -7,14 +7,17 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@vueup/vue-quill": "^1.0.0-alpha.40",
     "@vueuse/core": "^4.11.1",
     "@vueuse/integrations": "^4.11.1",
     "ant-design-vue": "^2.1.6",
     "axios": "^0.21.1",
+    "quill-image-uploader": "^1.2.2",
     "reset.css": "^2.0.2",
     "sass": "^1.34.0",
     "vue": "^3.0.5",
     "vue-router": "^4.0.8",
+    "vue3-quill": "^0.2.5",
     "vuex": "^4.0.1",
     "vuex-persistedstate": "^4.0.0-beta.3"
   },

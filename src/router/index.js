@@ -17,22 +17,27 @@ const routes= [
       {
         path:'user-list',
         name:'user-list',
-        component: () => import(/* webpackChunkName: "user" */ '../views/user/index.vue')
+        component: () => import(/* webpackChunkName: "user-list" */ '../views/user/index.vue')
       },
       {
         path:'article-list',
         name:'article-list',
-        component: () => import(/* webpackChunkName: "article" */ '../views/article/index.vue')
+        component: () => import(/* webpackChunkName: "article-list" */ '../views/article/list.vue')
+      },
+      {
+        path:'article-detail',
+        name:'article-detail',
+        component: () => import(/* webpackChunkName: "article-detail" */ '../views/article/index.vue')
       },
       {
         path:'tag-list',
         name:'tag-list',
-        component: () => import(/* webpackChunkName: "tag" */ '../views/tag/index.vue')
+        component: () => import(/* webpackChunkName: "tag-list" */ '../views/tag/index.vue')
       },
       {
         path:'category-list',
         name:'category-list',
-        component: () => import(/* webpackChunkName: "category" */ '../views/category/index.vue')
+        component: () => import(/* webpackChunkName: "category-list" */ '../views/category/index.vue')
       },
     ]
   },

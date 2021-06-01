@@ -9,6 +9,8 @@ import {
   Row,
   Col,
   Input,
+  Switch,
+  Select
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 
@@ -24,4 +26,6 @@ export default function (app) {
     .use(Row)
     .use(Col)
     .use(Input)
+    .use(Switch)
+    .use(Select)
 }

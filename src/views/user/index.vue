@@ -11,22 +11,22 @@
         >
           <a-col :span="8">
             <a-form-item label="用户名">
-              <a-input v-model:value="form.username" />
+              <a-input v-model:value="state.form.username" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="联系电话">
-              <a-input v-model:value="form.phone" />
+              <a-input v-model:value="state.form.phone" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="用户状态">
-              <a-input v-model:value="form.status" />
+              <a-input v-model:value="state.form.status" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="创建时间">
-              <a-input v-model:value="form.created" />
+              <a-input v-model:value="state.form.created" />
             </a-form-item>
           </a-col>
           <a-col
@@ -48,7 +48,7 @@
     </div>
     <a-table
       striped
-      row-key="id" 
+      row-key="id"
       :pagination="{ total:state.total }"
       :data-source="state.users"
       :columns="state.columns"
@@ -89,14 +89,36 @@
     </a-table>
     <a-modal
       v-model:visible="visible"
-      title="Modal"
+      :title="modal_title"
       ok-text="确认"
       cancel-text="取消"
       @ok="hideModal"
     >
-      <p>Bla bla ...</p>
-      <p>Bla bla ...</p>
-      <p>Bla bla ...</p>
+      <a-form
+        style="width:100%"
+        :label-col="{ style:'width:80px;margin-right:12px' }"
+        :wrapper-col="{ style:'flex:1' }"
+        :model="state.modal"
+      >
+        <a-form-item label="用户名">
+          <a-input v-model:value="state.modal.username" />
+        </a-form-item>
+        <a-form-item label="状态">
+          <a-input v-model:value="state.modal.status" />
+        </a-form-item>
+        <a-form-item label="所属公司">
+          <a-input v-model:value="state.modal.company" />
+        </a-form-item>
+        <a-form-item label="所在职位">
+          <a-input v-model:value="state.modal.position" />
+        </a-form-item>
+        <a-form-item label="简介">
+          <a-input v-model:value="state.modal.desc" />
+        </a-form-item>
+        <a-form-item label="创建日期">
+          <a-input v-model:value="state.modal.created" />
+        </a-form-item>
+      </a-form>
     </a-modal>
   </div>
 </template>
@@ -107,7 +129,21 @@ import instance from '../../utils/service'
 import { ref, toRaw, onMounted, watch, reactive } from 'vue'
 const state = reactive({
   users: [],
-  total:0,
+  form: {
+    username: '',
+    phone: '',
+    created: '',
+    status: ''
+  },
+  modal: {
+    username: '',
+    company:'',
+    position:'',
+    desc:'',
+    created: '',
+    status: ''
+  },
+  total: 0,
   columns: [
     {
       title: '用户名',
@@ -135,12 +171,22 @@ onMounted(() => {
     console.error(data.value)
   })
 })
+// Modal
 const visible = ref(false)
+const modal_title = ref('')
 const onView = item => {
   console.log(toRaw(item))
+  modal_title.value = '查看'
+  state.modal = item
+  visible.value = true
+
 }
 const onChange = item => {
   console.log(item)
+  modal_title.value = '修改'
+  state.modal = item
+  visible.value = true
+
 }
 const onDisable = item => {
   console.log(item)
