@@ -3,7 +3,14 @@
     <div class="serch-panel">
       search
     </div>
-    <div class="buttons" />
+    <div class="buttons">
+      <a-button
+        type="priamry"
+        @click="handle"
+      >
+        新建
+      </a-button>
+    </div>
   </div>
 </template>
 
@@ -20,7 +27,7 @@ export default {
     justify-content: flex-end;
     align-items:center;
     button {
-      magin-left:18px;
+      margin-left:18px;
     }
   }
 }
