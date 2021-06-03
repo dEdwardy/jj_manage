@@ -5,9 +5,7 @@
       :trigger="null"
       collapsible
     >
-      <div
-        class="logo"
-      >
+      <div class="logo">
         JJ Manage
       </div>
 
@@ -64,12 +62,13 @@
 </template>
 
 <script setup>
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
 import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const collapsed = ref(false)
 const state = reactive({
-  selectedKeys:[],
+  selectedKeys: [],
   menu: [
     {
       path: 'user',
@@ -159,7 +158,7 @@ const jump = ({ key }) => {
   }
 
   .logo {
-    transition: all .3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     font-style: italic;
     flex-wrap: nowrap;
     overflow: hidden;
@@ -167,7 +166,7 @@ const jump = ({ key }) => {
     // display: flex;
     // justify-content: center;
     // align-items: center;
-    color:#fff;
+    color: #fff;
     height: 32px;
     line-height: 32px;
     text-align: center;

@@ -8,6 +8,7 @@
         <a-form-item>
           <a-input
             v-model:value="state.form.username"
+            :autocomplete="false"
             placeholder="用户名"
             style="width:250px"
           />
@@ -15,6 +16,7 @@
         <a-form-item>
           <a-input
             v-model:value="state.form.password"
+            :autocomplete="false"
             placeholder="密码"
             style="width:250px"
             type="password"
@@ -36,6 +38,7 @@
 </template>
 
 <script setup>
+import { message } from "ant-design-vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from 'vuex'
@@ -48,14 +51,31 @@ const state = reactive({
   },
   loading: false
 })
-const login = () => {
+const login = async () => {
   state.loading = true
-  dispatch('login', state.form).then(() => {
-    state.loading = false
+  const data = await dispatch('login', state.form)
+  if (data.error) {
+    message.error(data.error)
+  } else {
+    await dispatch('getDict')
     router.push({
       name:'home'
     })
-  })
+  }
+  // dispatch('login', state.form).then(data => {
+  //   state.loading = false
+  //   if (data.error) {
+  //     message.error(data.error)
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+
+  // }).then(res => {
+  //   if (res) {
+  //     dispatch('dict').then(() => { })
+  //   }
+  // })
 }
 </script>
 
@@ -79,6 +99,10 @@ const login = () => {
       color: #fff;
       background-color: transparent;
     }
+    input:-webkit-autofill {
+      box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.4) inset !important;
+    }
+
     ::v-deep(.ant-input:hover) {
       border: 1px solid #fff !important;
       box-shadow: none;
