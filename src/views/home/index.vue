@@ -54,7 +54,7 @@
           @click="() => (collapsed = !collapsed)"
         />
       </a-layout-header>
-      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' }">
+      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' ,'overflow-y':'scroll'}">
         <router-view />
       </a-layout-content>
     </a-layout>

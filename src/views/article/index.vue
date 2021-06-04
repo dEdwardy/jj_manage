@@ -2,6 +2,13 @@
   <div class="article-detail">
     article detail
     <div class="buttons">
+      <a-button
+        size="small"
+        style="margin-right:12px"
+        @click="router.back"
+      >
+        返回
+      </a-button>
       <div
         class="flex align-center"
         style="margin-right:12px"
@@ -75,10 +82,11 @@
     </div>
     <div class="editor">
       <quill-editor
+        ref="editor"
         v-model:content="state.form.content"
         :toolbar="state.toolbar"
         content-type="html"
-        style="height:400px"
+        style="min-height:350px"
         theme="snow"
       />
     </div>
@@ -86,38 +94,21 @@
 </template>
 
 <script setup>
-import { reactive, toRaw, watch } from 'vue'
+import { onMounted, reactive,ref, toRaw, watch } from 'vue'
 
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { useAxios } from '@vueuse/integrations';
 import instance from '../../utils/service';
 import { message } from 'ant-design-vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-
+const editor = ref(null)
+const route = useRoute()
 const store = useStore()
 const state = reactive({
   preview: false,
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    ['blockquote', 'code-block'],
-    ['image'],
-    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-    [{ 'direction': 'rtl' }],                         // text direction
-
-    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': [] }],
-    [{ 'align': [] }],
-
-    ['clean']
-  ],
+  toolbar:'full',
   form: {
     title: '',
     brief_content: '',
@@ -125,21 +116,50 @@ const state = reactive({
     author: '',
     category: '',
     tag: [],
-    author:store.state.uinfo.id
+    author: store.state.uinfo.id
   },
   tagList: []
 })
 const categoryList = store.state.dict.category
-watch(() => state.form.category, id => {
+const getDetail = (id) => {
+  const { data, error } = useAxios(`/article/${id}`, instance)
+  watch(data, (res) => {
+    if (!error.value) {
+      console.error(res)
+      state.form.title = res.title
+      // state.form.content = res.content 
+      editor.value.setHTML(res.content)
+      state.form.brief_content = res.brief_content
+      state.form.author = res.brief_content
+      state.form.category = res.category.id
+      state.tagList = categoryList?.filter(i => i.id === state.form.category)[0]?.tag ?? []
+      state.form.tag = res.tag.map(i => i.id)
+    }
+  })
+}
+onMounted(() => {
+  if (route.params.id) {
+  getDetail(route.params.id)
+}
+})
+const handleCategoryChange = id => {
   console.error(id)
   state.form.tag = []
-  state.tagList = categoryList.filter(i => i.id === id)[0]?.tag ?? []
-})
+  state.tagList = categoryList?.filter(i => i.id === id)[0]?.tag ?? []
+}
+// watch(() => state.form.category, id => {
+//   console.error(id)
+//   state.form.tag = []
+//   console.error(store.state.dict.category)
+//   console.error(store.state.dict)
+//   console.error(store.state)
+//   state.tagList = categoryList?.filter(i => i.id === id)[0]?.tag ?? []
+// })
 const router = useRouter()
 //默认 pulish false  (save)
 const submit = (publish = false) => {
   const url = publish ? '/article/publish' : '/article/save'
-  const { data,error } = useAxios(url, { method: 'post', data: state.form }, instance)
+  const { data, error } = useAxios(url, { method: 'post', data: state.form }, instance)
   watch(data, () => {
     if (!error.value) {
       message.success('操作成功')

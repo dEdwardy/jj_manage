@@ -27,19 +27,42 @@
             type="ghost"
             :loading="state.loading"
             style="background:#000;color:#fff"
-            @click="login"
+            @click="showVerify"
           >
             登录
           </a-button>
         </a-form-item>
       </a-form>
+      <!-- <div style="user-select:none"> -->
+      <a-modal
+        v-model:visible="state.visible"
+        :body-style="{ background:'rgba(0,0,0,.6)'}"
+        :footer="null"
+      >
+        <div class="flex justify-center align-center verify-wrapper">
+          <drag-verify-img-rotate
+            ref="verify"
+            v-model:isPassing="state.pass"
+            width="220"
+            imgsrc="https://edw4rd.cn/assets/avatar.jpg"
+            text="请按住滑块拖动"
+            success-text="验证通过"
+            handler-icon="el-icon-d-arrow-right"
+            success-icon="el-icon-circle-check"
+            @refresh="reimg"
+            @passcallback="handlePass"
+          />
+        </div>
+      </a-modal>
+      <!-- </div> -->
     </div>
   </div>
 </template>
 
 <script setup>
+import DragVerifyImgRotate from '@/components/DragVerifyImgRotate.vue'
 import { message } from "ant-design-vue";
-import { reactive } from "vue";
+import { nextTick, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from 'vuex'
 const { dispatch } = useStore()
@@ -49,8 +72,12 @@ const state = reactive({
     username: '',
     password: ''
   },
+  visible: false,
+  pass: false,
   loading: false
 })
+const verify = ref(null)
+
 const login = async () => {
   state.loading = true
   const data = await dispatch('login', state.form)
@@ -59,23 +86,25 @@ const login = async () => {
   } else {
     await dispatch('getDict')
     router.push({
-      name:'home'
+      name: 'home'
     })
   }
-  // dispatch('login', state.form).then(data => {
-  //   state.loading = false
-  //   if (data.error) {
-  //     message.error(data.error)
-  //     return false
-  //   } else {
-  //     return true
-  //   }
+}
+const reimg = () => {
+  console.error('reimg')
+}
+const handlePass = () => {
+  console.error('pass')
+  state.visible = false
+  login()
 
-  // }).then(res => {
-  //   if (res) {
-  //     dispatch('dict').then(() => { })
-  //   }
-  // })
+}
+const showVerify = () => {
+  // if(!state.pass)state.pass = false
+  state.visible = true
+  nextTick(() => {
+    verify.value.reset()
+  })
 }
 </script>
 
@@ -86,7 +115,6 @@ const login = async () => {
   background-image: url('../../assets/img/bg.webp');
   background-size: 100% 100%;
   background-repeat: no-repeat;
-
   .login-form {
     border-radius: 12px;
     padding: 20px 60px 0px;
@@ -152,6 +180,9 @@ const login = async () => {
       font-weight: 500;
       margin-bottom: 20px;
     }
+  }
+  ::v-deep(.verify-wrapper) {
+    background-color: rgba(0, 0, 0, 0.4) !important;
   }
 }
 </style>
