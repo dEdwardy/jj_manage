@@ -12,13 +12,14 @@
       </a-button>
     </div>
     <a-table
-      striped
+      :loading="state.loading"
       row-key="id"
       size="small"
       :pagination="{ total:state.total }"
       :data-source="state.list"
       :columns="state.columns"
       :row-class-name="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+      @change="handleTableChange"
     >
       <template #category="{ record }">
         <div>
@@ -83,17 +84,24 @@ import { onMounted, reactive, watch, toRaw } from "vue"
 import { useRouter } from "vue-router"
 import instance from "../../utils/service"
 import { format, parseISO } from 'date-fns'
+import { useStore } from "vuex"
 
 
 const router = useRouter()
+const store = useStore()
+const tagList = Object.keys(store.state.dict.articleState).map(value => ({ value,text:store.state.dict.articleState[value] }))
 const state = reactive({
   list: [],
+  // categoryFilters:store.state.dict.category.map(({ name,id }) => ({ text:name,value:id })),
+  // tagFilters:store.state.dict.tag,
   total: 0,
+  loading: false,
   columns: [
     {
       title: '标题',
       dataIndex: 'title',
-      key: 'title'
+      key: 'title',
+      ellipsis: true
     },
     {
       title: '简介',
@@ -106,20 +114,22 @@ const state = reactive({
       dataIndex: 'category',
       key: 'category',
       width: 120,
-      slots: { customRender: 'category' }
+      slots: { customRender: 'category' },
+      filters:store.state.dict.category.map(({ name,id }) => ({ text:name,value:id }))
     },
     {
       title: '标签',
       ellipsis: true,
       dataIndex: 'tag',
       key: 'tag',
-      slots: { customRender: 'tag' }
+      slots: { customRender: 'tag' },
     },
     {
       title: '状态',
       dataIndex: 'state',
       key: 'state',
-      slots: { customRender: 'state' }
+      slots: { customRender: 'state' },
+      filters:tagList
 
     },
     {
@@ -129,7 +139,8 @@ const state = reactive({
       customRender: ({ record }) => {
         //utc => paseISO => format
         return format(parseISO(record.created), "yyyy-MM-dd kk:mm:ss")
-      }
+      },
+      sorter:true
     },
     {
       title: '更新日期',
@@ -138,7 +149,8 @@ const state = reactive({
       customRender: ({ record }) => {
         //utc => paseISO => format
         return format(parseISO(record.updated), "yyyy-MM-dd kk:mm:ss")
-      }
+      },
+      sorter:true
     },
     {
       title: 'operation',
@@ -148,25 +160,36 @@ const state = reactive({
     }
   ],
 })
-const getList = () => {
-  const { data, error } = useAxios('article', {}, instance)
+const getList = (options = { }) => {
+  state.loading = true;
+  const { data, error } = useAxios('article', { method:'post',data: options }, instance)
   watch(data, (res) => {
     if (!error.value) {
       console.error(res)
       state.list = res.list
       state.total = res.total
     }
+    state.loading = false;
   })
 }
 onMounted(() => getList())
 const onView = record => {
   console.error(record)
   router.push({
-    name:'article-detail',
-    params:{
-      id:record.id
+    name: 'article-detail',
+    params: {
+      id: record.id
     }
   })
+}
+const handleTableChange = (pagination, filters, sorter) => {
+   console.log(pagination, filters, sorter);
+  let options = {}
+  let { columnKey, order }  = sorter
+  let { category }  = filters
+  if(order)options = { ...options, sortBy: { sortKey: columnKey, sortValue: order === 'ascend' ? 'ASC' :'DESC'  }}
+  if(category) options = { ...options, category }
+  getList(options)
 }
 const onChange = record => console.error(record)
 const onDelete = record => console.error(record)

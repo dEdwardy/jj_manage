@@ -7,7 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@vueup/vue-quill": "^1.0.0-alpha.40",
+    "@vueup/vue-quill": "^1.0.0-alpha.1",
     "@vueuse/core": "^4.11.1",
     "@vueuse/integrations": "^4.11.1",
     "ant-design-vue": "^2.1.6",

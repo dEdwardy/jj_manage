@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-import { message } from 'ant-design-vue'
+import { notification } from 'ant-design-vue'
 import { DoubleRightOutlined, CheckCircleOutlined } from '@ant-design/icons-vue';
 export default {
   name: "DragVerifyImgRotate",
@@ -283,10 +283,16 @@ export default {
           }, 500);
           this.showErrorTip = true;
           this.$emit("passfail");
-          message.warn('验证失败')
+          notification.warn({
+            message:'验证失败',
+            duration:2
+          })
         } else {
           this.passVerify();
-          message.success('验证成功')
+          // notification.success({
+          //   message:'验证成功',
+          //   duration:2
+          // })
         }
         this.isMoving = false;
       }

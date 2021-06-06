@@ -1,5 +1,8 @@
 <template>
-  <div class="login">
+  <div
+    ref="loginRef"
+    class="login"
+  >
     <div class="login-form">
       <p class="title">
         JJ Manage
@@ -36,14 +39,18 @@
       <!-- <div style="user-select:none"> -->
       <a-modal
         v-model:visible="state.visible"
-        :body-style="{ background:'rgba(0,0,0,.6)'}"
+        centered
+        :get-container="loginRef"
+        wrap-class-name="verify-modal"
+        :mask-closable="false"
+        :body-style="{ background:'rgba(0,0,0,.2)'}"
         :footer="null"
       >
         <div class="flex justify-center align-center verify-wrapper">
           <drag-verify-img-rotate
             ref="verify"
             v-model:isPassing="state.pass"
-            width="220"
+            :width="220"
             imgsrc="https://edw4rd.cn/assets/avatar.jpg"
             text="请按住滑块拖动"
             success-text="验证通过"
@@ -62,9 +69,11 @@
 <script setup>
 import DragVerifyImgRotate from '@/components/DragVerifyImgRotate.vue'
 import { message } from "ant-design-vue";
-import { nextTick, reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from 'vuex'
+const loginRef = ref(null)
+const password = ref('')
 const { dispatch } = useStore()
 const router = useRouter()
 const state = reactive({
@@ -81,10 +90,13 @@ const verify = ref(null)
 const login = async () => {
   state.loading = true
   const data = await dispatch('login', state.form)
+  console.error(data)
   if (data.error) {
+    state.loading = false
     message.error(data.error)
   } else {
     await dispatch('getDict')
+    state.loading = false
     router.push({
       name: 'home'
     })
@@ -115,6 +127,10 @@ const showVerify = () => {
   background-image: url('../../assets/img/bg.webp');
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  .verify-wrapper .ant-modal-close-x {
+    color: #fff;
+  }
+
   .login-form {
     border-radius: 12px;
     padding: 20px 60px 0px;
@@ -128,13 +144,23 @@ const showVerify = () => {
       background-color: transparent;
     }
     input:-webkit-autofill {
-      box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.4) inset !important;
+      // box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.3) inset !important;
+      box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.2) inset !important;
+      color: #fff !important;
     }
-
-    ::v-deep(.ant-input:hover) {
-      border: 1px solid #fff !important;
-      box-shadow: none;
-    }
+    // input:-internal-autofill-selected {
+    //   background: rgba(0, 0, 0, 0.3) !important;
+    //   color: #fff !important;
+    //   // box-shadow: inset 0 0 0 1000px white !important;
+    // }
+    // input:-webkit-autofill:focus {
+    //   color: #fff !important;
+    //   box-shadow: 0 0 0px 1000px white inset !important;
+    // }
+    // ::v-deep(.ant-input:hover) {
+    //   border: 1px solid #fff !important;
+    //   box-shadow: none;
+    // }
     ::v-deep(.ant-input::placeholder) {
       color: #fff !important;
     }
@@ -180,9 +206,6 @@ const showVerify = () => {
       font-weight: 500;
       margin-bottom: 20px;
     }
-  }
-  ::v-deep(.verify-wrapper) {
-    background-color: rgba(0, 0, 0, 0.4) !important;
   }
 }
 </style>

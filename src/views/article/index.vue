@@ -9,7 +9,7 @@
       >
         返回
       </a-button>
-      <div
+      <!-- <div
         class="flex align-center"
         style="margin-right:12px"
       >
@@ -18,8 +18,9 @@
           v-model:checked="state.preview"
           style="margin:0 4px"
         />
-      </div>
+      </div> -->
       <a-button
+        v-if="!state.form.id"
         size="small"
         style="margin-right:12px"
         @click="save"
@@ -94,7 +95,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive,ref, toRaw, watch } from 'vue'
+import { onMounted, reactive, ref, toRaw, watch, nextTick } from 'vue'
 
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
@@ -108,8 +109,9 @@ const route = useRoute()
 const store = useStore()
 const state = reactive({
   preview: false,
-  toolbar:'full',
+  toolbar: 'full',
   form: {
+    id: '',
     title: '',
     brief_content: '',
     content: '',
@@ -126,11 +128,19 @@ const getDetail = (id) => {
   watch(data, (res) => {
     if (!error.value) {
       console.error(res)
+      state.form.id = res.id
       state.form.title = res.title
       // state.form.content = res.content 
+      // editor.value.getQuill().enable(false)
       editor.value.setHTML(res.content)
+      nextTick(() => {
+        editor.value.getQuill().enable(true)
+        editor.value.getQuill().blur()
+      })
+      // console.error(toRaw(editor.value.getQuill().enable))
+      // console.error(toRaw(editor.value.enable))
       state.form.brief_content = res.brief_content
-      state.form.author = res.brief_content
+      // state.form.author = res.brief_content
       state.form.category = res.category.id
       state.tagList = categoryList?.filter(i => i.id === state.form.category)[0]?.tag ?? []
       state.form.tag = res.tag.map(i => i.id)
@@ -139,8 +149,8 @@ const getDetail = (id) => {
 }
 onMounted(() => {
   if (route.params.id) {
-  getDetail(route.params.id)
-}
+    getDetail(route.params.id)
+  }
 })
 const handleCategoryChange = id => {
   console.error(id)

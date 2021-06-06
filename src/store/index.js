@@ -5,7 +5,8 @@ import API from '../utils/service'
 export default createStore({
   state: {
     uinfo: {},
-    dict:{ }
+    dict:{ },
+    loadingCount:0
   },
   getters: {
     uinfo: (state) => state.uinfo,
@@ -17,7 +18,7 @@ export default createStore({
     },
     SET_DICT(state, dict) {
       state.dict = dict
-    }
+    },
   },
   actions: {
     login({commit },data){

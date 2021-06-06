@@ -49,6 +49,7 @@
     <a-table
       striped
       row-key="id"
+      :loading="state.loading"
       :pagination="{ total:state.total }"
       :data-source="state.users"
       :columns="state.columns"
@@ -129,6 +130,7 @@ import instance from '../../utils/service'
 import { ref, toRaw, onMounted, watch, reactive } from 'vue'
 const state = reactive({
   users: [],
+  loading:false,
   form: {
     username: '',
     phone: '',
@@ -163,13 +165,17 @@ const state = reactive({
     }
   ]
 })
-onMounted(() => {
+const getList = () => {
+ state.loading = true
   const { data } = useAxios('/user', {}, instance)
-  watch(data, () => {
-    state.users = data.value.list
-    state.total = data.value.total
-    console.error(data.value)
+  watch(data, res => {
+    state.users = res.list
+    state.total = res.total
+    state.loading = false
   })
+}
+onMounted(() => {
+ getList()
 })
 // Modal
 const visible = ref(false)

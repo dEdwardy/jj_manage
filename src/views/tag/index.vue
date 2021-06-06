@@ -40,6 +40,7 @@
     <a-table
       striped
       row-key="id"
+      :loading="state.loading"
       size="small"
       :pagination="{ total:state.total }"
       :data-source="state.tags"
@@ -97,7 +98,7 @@
             确认
           </a-button>
         </div>
-      </template> 
+      </template>
       <a-form
         style="width:100%"
         :label-col="{ style:'width:80px;margin-right:12px' }"
@@ -140,6 +141,7 @@ import instance from '../../utils/service'
 import { ref, toRaw, onMounted, watch, reactive } from 'vue'
 const state = reactive({
   tags: [],
+  loading: false,
   categoryList: [],
   btnLoading: false,
   modalBtnLoading: false,
@@ -148,12 +150,12 @@ const state = reactive({
   },
   rules: {
     name: [{ required: true, message: '请输入标签名', trigger: 'change' }],
-    category: [{ required: true, message: '请选择类目名', trigger: 'change',type:'number' }]
+    category: [{ required: true, message: '请选择类目名', trigger: 'change', type: 'number' }]
   },
   modal: {
     name: '',
-    category:'',
-    id:''
+    category: '',
+    id: ''
   },
   total: 0,
   columns: [
@@ -172,11 +174,12 @@ const state = reactive({
 })
 const { resetFields, validate, validateInfos } = useForm(state.modal, state.rules)
 const getList = () => {
+  state.loading = true
   const { data } = useAxios('/tag/list', {}, instance)
-  watch(data, () => {
-    state.tags = data.value.list
-    state.total = data.value.total
-    console.error(data.value)
+  watch(data, res => {
+    state.tags = res.list
+    state.total = res.total
+    state.loading = false
   })
 }
 onMounted(() => {
@@ -189,9 +192,9 @@ const modal_title = ref('')
 
 const getCategoryList = () => {
   const { data, error } = useAxios('/category', {}, instance)
-  watch(data, () => {
+  watch(data, res => {
     if (!error.value) {
-      state.categoryList = data.value
+      state.categoryList = res
     }
   })
 }
@@ -250,11 +253,11 @@ const handleSure = () => {
       })
       break;
     case '修改标签':
-       validate().then(() => {
+      validate().then(() => {
         state.modalBtnLoading = true
         const { data, error, isLoading } = useAxios('/tag', {
           method: 'put', data: {
-            id:state.modal.id,
+            id: state.modal.id,
             name: state.modal.name,
             category: state.modal.category
           }
@@ -301,8 +304,8 @@ const onDelete = item => {
 
 <style lang="scss" scoped>
 .tag-list {
-  ::v-deep(.ant-modal-body){
-    padding:24px 24px 16px;
+  ::v-deep(.ant-modal-body) {
+    padding: 24px 24px 16px;
   }
   .operation-btns {
     display: flex;

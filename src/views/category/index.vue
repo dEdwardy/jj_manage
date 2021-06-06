@@ -1,6 +1,9 @@
 <template>
   <div class="category-list">
-    <div class="search-panel">
+    <div
+      :loading="true"
+      class="search-panel"
+    >
       <a-row>
         <a-form
           style="width:100%"
@@ -41,6 +44,7 @@
       striped
       row-key="id"
       size="small"
+      :loading="state.loading"
       :pagination="{ total:state.total }"
       :data-source="state.categorys"
       :columns="state.columns"
@@ -109,6 +113,7 @@ import instance from '../../utils/service'
 import { ref, toRaw, onMounted, watch, reactive } from 'vue'
 const state = reactive({
   categorys: [],
+  loading:false,
   btnLoading: false,
   modalBtnLoading: false,
   form: {
@@ -137,11 +142,13 @@ const state = reactive({
 })
 const { resetFields, validate, validateInfos } = useForm(state.modal, state.rules)
 const getList = () => {
+  state.loading = true
   const { data } = useAxios('/category/list', {}, instance)
   watch(data, () => {
     state.categorys = data.value.list
     state.total = data.value.total
     console.error(data.value)
+  state.loading = false
   })
 }
 onMounted(() => {

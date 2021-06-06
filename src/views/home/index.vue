@@ -54,7 +54,9 @@
           @click="() => (collapsed = !collapsed)"
         />
       </a-layout-header>
-      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' ,'overflow-y':'scroll'}">
+      <a-layout-content
+        :style="{ margin: '24px 16px', padding: '24px', background: '#fff' ,'overflow-y':'scroll'}"
+      >
         <router-view />
       </a-layout-content>
     </a-layout>
@@ -63,7 +65,7 @@
 
 <script setup>
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, } from 'vue';
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const collapsed = ref(false)
@@ -133,7 +135,9 @@ const jump = ({ key }) => {
   router.push({
     name: key
   })
+
 }
+
 </script>
 
 <style lang="scss" scoped>
