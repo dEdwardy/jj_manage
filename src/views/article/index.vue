@@ -95,10 +95,10 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, toRaw, watch, nextTick } from 'vue'
-
-import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import '@vueup/vue-quill/dist/vue-quill.bubble.css';
+import { onMounted, reactive, ref, toRaw, watch, nextTick } from 'vue'
+import { QuillEditor } from '@vueup/vue-quill'
 import { useAxios } from '@vueuse/integrations';
 import instance from '../../utils/service';
 import { message } from 'ant-design-vue';
