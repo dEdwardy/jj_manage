@@ -38,6 +38,10 @@ const routes= [
         path:'category-list',
         name:'category-list',
         component: () => import(/* webpackChunkName: "category-list" */ '../views/category/index.vue')
+      }, {
+        path:'ad-list',
+        name:'ad-list',
+        component: () => import(/* webpackChunkName: "ad-list" */ '../views/ad/list.vue')
       },
     ]
   },

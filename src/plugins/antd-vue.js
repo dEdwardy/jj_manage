@@ -10,7 +10,9 @@ import {
   Col,
   Input,
   Switch,
-  Select
+  Select,
+  Upload,
+  InputNumber
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 
@@ -28,4 +30,6 @@ export default function (app) {
     .use(Input)
     .use(Switch)
     .use(Select)
+    .use(Upload)
+    .use(InputNumber)
 }

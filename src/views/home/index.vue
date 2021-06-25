@@ -42,7 +42,10 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
+      <a-layout-header
+        class="flex align-center justify-between"
+        style="background: #fff; padding: 0"
+      >
         <menu-unfold-outlined
           v-if="collapsed"
           class="trigger"
@@ -53,6 +56,13 @@
           class="trigger"
           @click="() => (collapsed = !collapsed)"
         />
+        <div class="user">
+          <img 
+            class="avatar"
+            src="https://edw4rd.cn/assets/avatar.jpg"
+            alt=""
+          >
+        </div>
       </a-layout-header>
       <a-layout-content
         :style="{ margin: '24px 16px', padding: '24px', background: '#fff' ,'overflow-y':'scroll'}"
@@ -127,6 +137,20 @@ const state = reactive({
           icon: '',
         }
       ]
+    },
+       {
+      path: 'ad',
+      name: 'ad',
+      text: '广告管理',
+      icon: 'ad-manage',
+      children: [
+        {
+          path: 'list',
+          name: 'ad-list',
+          text: '广告列表',
+          icon: '',
+        }
+      ]
     }
   ]
 })
@@ -145,6 +169,14 @@ const jump = ({ key }) => {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  .user{
+    margin-right:20px;
+    .avatar{
+      width:48px;
+      height:48px;
+      border-radius: 50%;
+    }
+  }
   .menu-icon {
     width: 18px;
     height: 18px;
