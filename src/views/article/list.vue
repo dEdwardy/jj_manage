@@ -15,7 +15,7 @@
       :loading="state.loading"
       row-key="id"
       size="small"
-      :pagination="{ total:state.total }"
+      :pagination="{ total:state.total,onChange: handlePageChange }"
       :data-source="state.list"
       :columns="state.columns"
       :row-class-name="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
@@ -172,6 +172,14 @@ const getList = (options = { }) => {
     state.loading = false;
   })
 }
+const handlePageChange = (page,pageSize) => {
+  // console.error('handlePageChange')
+  // console.error(page,pageSize)
+  // getList({
+  //   page,
+  //   limit:pageSize
+  // })
+}
 onMounted(() => getList())
 const onView = record => {
   console.error(record)
@@ -182,14 +190,19 @@ const onView = record => {
     }
   })
 }
-const handleTableChange = (pagination, filters, sorter) => {
-   console.log(pagination, filters, sorter);
+const handleTableChange = ({ current,pageSize }, filters, sorter) => {
+  console.error('handleTableChange')
+   console.error(filters, sorter);
   let options = {}
   let { columnKey, order }  = sorter
   let { category }  = filters
   if(order)options = { ...options, sortBy: { sortKey: columnKey, sortValue: order === 'ascend' ? 'ASC' :'DESC'  }}
   if(category) options = { ...options, category }
-  getList(options)
+  getList({
+    ...options,
+    page:current,
+    limit:pageSize
+  })
 }
 const onChange = record => console.error(record)
 const onDelete = record => console.error(record)
