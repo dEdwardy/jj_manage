@@ -53,29 +53,29 @@ const done = () => {
   progress.value = 1.0
 }
 const router = createRouter({
-  history: createWebHistory('/juejin_manage'),
+  history: createWebHistory('/jj-manage'),
   routes
 })
-const whiteList = ['/','/login']
+const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
   // console.error('start')
   // console.warn(to)
-  next()
-  // if (whiteList.some((i) => to.path=== i)) {
-  //   console.error('white')
-  //   start()
-  //   next()
-  // } else {
-  //   const token = localStorage.getItem('token')
-  //   if (!token) {
-  //     console.error('home')
-  //     next({ path: '/login' })
-  //   } else {
-  //     console.error('continus')
-  //     start()
-  //     next()
-  //   }
-  // }
+  // next()
+  if (whiteList.some((i) => to.path=== i)) {
+    console.error('white')
+    start()
+    next()
+  } else {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      console.error('home')
+      next({ path: '/login' })
+    } else {
+      console.error('continus')
+      start()
+      next()
+    }
+  }
 })
 router.afterEach(() => {
   // console.error('end')

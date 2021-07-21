@@ -57,16 +57,29 @@
           @click="() => (collapsed = !collapsed)"
         />
         <div class="user">
-          <img 
-            class="avatar"
-            src="https://edw4rd.cn/assets/avatar.jpg"
-            alt=""
-          >
+          <a-dropdown @click.prevent>
+            <img
+              class="avatar"
+              src="https://edw4rd.cn/assets/avatar.jpg"
+              alt=""
+            >
+            <template #overlay>
+              <a-menu @click="handleClickMenu">
+                <a-menu-item key="a">
+                  1st menu item
+                </a-menu-item>
+                <a-menu-item key="b">
+                  2nd menu item
+                </a-menu-item>
+                <a-menu-item key="c">
+                  退出
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
       </a-layout-header>
-      <a-layout-content
-        :style="{ margin: '24px 16px', padding: '24px', background: '#fff' ,'overflow-y':'scroll'}"
-      >
+      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' ,'overflow-y':'scroll'}">
         <router-view />
       </a-layout-content>
     </a-layout>
@@ -77,6 +90,7 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
 import { ref, reactive, } from 'vue';
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex';
 const router = useRouter()
 const collapsed = ref(false)
 const state = reactive({
@@ -138,7 +152,7 @@ const state = reactive({
         }
       ]
     },
-       {
+    {
       path: 'ad',
       name: 'ad',
       text: '广告管理',
@@ -161,6 +175,20 @@ const jump = ({ key }) => {
   })
 
 }
+const store  = useStore()
+const handleLogOut = () => {
+  store.commit('LOG_OUT')
+  jump({key:'login' })
+}
+const handleClickMenu = ({ key }) => {
+  switch (key) {
+    case 'c':
+      handleLogOut()
+      break;
+    default:
+      break;
+  }
+}
 
 </script>
 
@@ -169,11 +197,11 @@ const jump = ({ key }) => {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  .user{
-    margin-right:20px;
-    .avatar{
-      width:48px;
-      height:48px;
+  .user {
+    margin-right: 20px;
+    .avatar {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
     }
   }

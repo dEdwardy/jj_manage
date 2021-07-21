@@ -68,10 +68,10 @@
 
 <script setup>
 import DragVerifyImgRotate from '@/components/DragVerifyImgRotate.vue'
-import { message } from "ant-design-vue";
 import { nextTick, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from 'vuex'
+import { notification } from 'ant-design-vue'
 const loginRef = ref(null)
 const password = ref('')
 const { dispatch } = useStore()
@@ -93,7 +93,9 @@ const login = async () => {
   console.error(data)
   if (data.error) {
     state.loading = false
-    message.error(data.error)
+    notification.error({
+      message:data.error
+    })
   } else {
     await dispatch('getDict')
     state.loading = false
@@ -109,10 +111,20 @@ const handlePass = () => {
   console.error('pass')
   state.visible = false
   login()
-
 }
 const showVerify = () => {
-  // if(!state.pass)state.pass = false
+  if(!state.form.username){
+    notification.error({
+      message:'请输入用户名'
+    })
+    return
+  }
+  if(!state.form.password){
+    notification.error({
+      message:'请输入密码'
+    })
+    return
+  }
   state.visible = true
   nextTick(() => {
     verify.value.reset()

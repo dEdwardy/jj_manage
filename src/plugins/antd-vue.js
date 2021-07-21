@@ -12,7 +12,8 @@ import {
   Switch,
   Select,
   Upload,
-  InputNumber
+  InputNumber,
+  Dropdown
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 
@@ -32,4 +33,5 @@ export default function (app) {
     .use(Select)
     .use(Upload)
     .use(InputNumber)
+    .use(Dropdown)
 }

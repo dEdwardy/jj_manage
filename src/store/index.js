@@ -19,6 +19,10 @@ export default createStore({
     SET_DICT(state, dict) {
       state.dict = dict
     },
+    LOG_OUT(state){
+      state.uinfo = {}
+      localStorage.removeItem('token')
+    }
   },
   actions: {
     login({commit },data){

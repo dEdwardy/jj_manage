@@ -7,6 +7,7 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base:'/jj-manage/',
   esbuild:{
     jsxFactory: 'h',
     jsxFragment: 'Fragment'

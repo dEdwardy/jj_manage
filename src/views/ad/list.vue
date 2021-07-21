@@ -21,7 +21,7 @@
         <div>
           <img
             style="width:60px;height:60px"
-            :src="'http://localhost:3000/static/'+record.url"
+            :src="'http://localhost:4001/static/'+record.url"
             alt=""
           >
         </div>
@@ -202,7 +202,7 @@ const onView = item => {
   modal_title.value = '查看'
   state.modal = item
   if(item.url){
-    state.fileList = [{ url:'http://localhost:3000/static/'+item.url   }]
+    state.fileList = [{ url:'http://localhost:4001/static/'+item.url   }]
   }
   visible.value = true
 
@@ -299,8 +299,11 @@ const onDelete = item => {
 .ad-list {
   .operation-btns {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
     margin-bottom: 12px;
+    button{
+      margin:0 10px;
+    }
   }
   .buttons {
     display: flex;
